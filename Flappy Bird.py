@@ -1,14 +1,12 @@
 import pygame, sys, random
 #Tạo hàm cho trò chơi
-
-
 def draw_floor():
     screen.blit(floor,(floor_x_pos,650))
     screen.blit(floor,(floor_x_pos+432,650))
 def create_pipe():
     random_pipe_pos = random.choice(pipe_height)
     bottom_pipe = pipe_surface.get_rect(midtop =(500,random_pipe_pos))
-    top_pipe = pipe_surface.get_rect(midtop =(500,random_pipe_pos-650))
+    top_pipe = pipe_surface.get_rect(midtop =(500,random_pipe_pos-750))
     return bottom_pipe, top_pipe
 def move_pipe(pipes):
 	for pipe in pipes :
@@ -60,9 +58,9 @@ pygame.display.set_caption("Flappy Bird")
 clock = pygame.time.Clock()
 game_font = pygame.font.Font('04B_19.ttf',35)
 #Tạo các biến cho trò chơi
-gravity = 0.25
+gravity = 0.2
 bird_movement = 0
-game_active = True
+game_active = False
 score = 0
 high_score = 0
 #chèn background
@@ -93,7 +91,7 @@ pipe_list =[]
 #tạo timer
 spawnpipe= pygame.USEREVENT
 pygame.time.set_timer(spawnpipe, 1200)
-pipe_height = [200,300,400]
+pipe_height = [300,350,400,450,500,550,600]
 #Tạo màn hình kết thúc
 game_over_surface = pygame.transform.scale2x(pygame.image.load('assets/message.png').convert_alpha())
 game_over_rect = game_over_surface.get_rect(center=(216,384))
@@ -112,7 +110,7 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE and game_active:
                 bird_movement = 0
-                bird_movement =-11
+                bird_movement = -7
                 flap_sound.play()
             if event.key == pygame.K_SPACE and game_active==False:
                 game_active = True 
