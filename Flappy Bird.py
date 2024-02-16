@@ -1,4 +1,4 @@
-import pygame, sys, random
+import pygame, sys, random, time
 #Tạo hàm cho trò chơi
 def draw_floor():
     screen.blit(floor,(floor_x_pos,650))
@@ -10,7 +10,7 @@ def create_pipe():
     return bottom_pipe, top_pipe
 def move_pipe(pipes):
 	for pipe in pipes :
-		pipe.centerx -= 5
+		pipe.centerx -= 2
 	return pipes
 def draw_pipe(pipes):
     for pipe in pipes:
@@ -58,11 +58,13 @@ pygame.display.set_caption("Flappy Bird")
 clock = pygame.time.Clock()
 game_font = pygame.font.Font('04B_19.ttf',35)
 #Tạo các biến cho trò chơi
-gravity = 0.2
+gravity = 0.17
 bird_movement = 0
 game_active = False
 score = 0
 high_score = 0
+game_over_timer = 0
+game_over_delay = 1
 #chèn background
 bg = pygame.image.load('assets/background-night.png').convert()
 bg = pygame.transform.scale2x(bg)
@@ -103,21 +105,25 @@ score_sound_countdown = 100
 #while loop của trò chơi
 
 while True:
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:
+           
             if event.key == pygame.K_SPACE and game_active:
                 bird_movement = 0
-                bird_movement = -7
+                bird_movement = -6
                 flap_sound.play()
             if event.key == pygame.K_SPACE and game_active==False:
-                game_active = True 
-                pipe_list.clear()
-                bird_rect.center = (100,384)
-                bird_movement = 0 
-                score = 0 
+                if time.time() - game_over_timer > game_over_delay:
+                    game_active = True 
+                    pipe_list.clear()
+                    bird_rect.center = (100,384)
+                    bird_movement = 0 
+                    score = 0
+                    game_over_timer = 0
         if event.type == spawnpipe:
             pipe_list.extend(create_pipe())
         if event.type == birdflap:
@@ -148,6 +154,8 @@ while True:
         screen.blit(game_over_surface,game_over_rect)
         high_score = update_score(score,high_score)
         score_display('game_over')
+        if game_over_timer == 0:
+            game_over_timer = time.time()
     #sàn
     floor_x_pos -= 1
     draw_floor()
