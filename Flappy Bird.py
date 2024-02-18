@@ -9,9 +9,9 @@ def create_pipe():
     top_pipe = pipe_surface.get_rect(midtop =(500,random_pipe_pos-750))
     return bottom_pipe, top_pipe
 def move_pipe(pipes):
-	for pipe in pipes :
-		pipe.centerx -= 2
-	return pipes
+    for pipe in pipes:
+        pipe.centerx -= 2
+    return pipes
 def draw_pipe(pipes):
     for pipe in pipes:
         if pipe.bottom >= 600 : 
@@ -27,6 +27,11 @@ def check_collision(pipes):
     if bird_rect.top <= -75 or bird_rect.bottom >= 650:
             return False
     return True 
+def check_pass_pipe(pipes):
+    for pipe in pipes:
+        if pipe.centerx == 100:
+            return True
+    return False
 def rotate_bird(bird1):
 	new_bird = pygame.transform.rotozoom(bird1,-bird_movement*3,1)
 	return new_bird
@@ -51,6 +56,7 @@ def update_score(score,high_score):
     if score > high_score:
         high_score = score
     return high_score
+
 pygame.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=512)
 pygame.init()
 screen= pygame.display.set_mode((432,768))
@@ -79,9 +85,9 @@ bird_up = pygame.transform.scale2x(pygame.image.load('assets/yellowbird-upflap.p
 bird_list= [bird_down,bird_mid,bird_up] #0 1 2
 bird_index = 0
 bird = bird_list[bird_index]
+bird_rect = bird.get_rect(center = (100,384))
 #bird= pygame.image.load('assets/yellowbird-midflap.png').convert_alpha()
 #bird = pygame.transform.scale2x(bird)
-bird_rect = bird.get_rect(center = (100,384))
 
 #tạo timer cho bird
 birdflap = pygame.USEREVENT + 1
@@ -101,11 +107,10 @@ game_over_rect = game_over_surface.get_rect(center=(216,384))
 flap_sound = pygame.mixer.Sound('sound/sfx_wing.wav')
 hit_sound = pygame.mixer.Sound('sound/sfx_hit.wav')
 score_sound = pygame.mixer.Sound('sound/sfx_point.wav')
-score_sound_countdown = 100
+
 #while loop của trò chơi
 
 while True:
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -135,24 +140,25 @@ while True:
             
     screen.blit(bg,(0,0))
     if game_active:
-        #chim
+        # chim
         bird_movement += gravity
         rotated_bird = rotate_bird(bird)       
         bird_rect.centery += bird_movement
-        screen.blit(rotated_bird,bird_rect)
+        screen.blit(rotated_bird, bird_rect)
         game_active= check_collision(pipe_list)
-        #ống
+        # ống
         pipe_list = move_pipe(pipe_list)
         draw_pipe(pipe_list)
-        score += 0.01
-        score_display('main game')
-        score_sound_countdown -= 1
-        if score_sound_countdown <= 0:
+        # Kiểm tra điểm
+        if check_pass_pipe(pipe_list):
+            score += 1
             score_sound.play()
-            score_sound_countdown = 100
+        
+        score_display('main game')
+       
     else:
-        screen.blit(game_over_surface,game_over_rect)
-        high_score = update_score(score,high_score)
+        screen.blit(game_over_surface, game_over_rect)
+        high_score = update_score(score, high_score)
         score_display('game_over')
         if game_over_timer == 0:
             game_over_timer = time.time()
