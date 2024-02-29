@@ -85,7 +85,6 @@ class FlappyBird:
                 self.score.increase_score()
 
     def render(self):
-        self.screen.fill((255, 255, 255))
         self.screen.blit(self.bg,(0,0))
         self.bird.draw(self.screen)
         self.pipes.draw(self.screen)
@@ -94,7 +93,6 @@ class FlappyBird:
         pygame.display.update()
 
     def show_menu(self, screen):
-        self.screen.fill((255, 255, 255))
         self.screen.blit(self.bg,(0,0)) 
         self.floor.update()
         self.floor.draw(screen)
