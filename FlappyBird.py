@@ -27,7 +27,7 @@ class FlappyBird:
 
         #Tạo biến
         self.game_active = False 
-        self.game_over_timer = 0
+        self.start_time_over = 0
 
         #Tạo âm thanh
         self.flap_sound = pygame.mixer.Sound('sound/sfx_wing.wav')
@@ -54,8 +54,9 @@ class FlappyBird:
             else:
                 self.background_music.play()
                 self.show_menu(self.screen)
-                if self.game_over_timer == 0:
-                    self.game_over_timer = time.time()
+                # if self.game_over_timer == 0:
+                #     self.game_over_timer = time.time()
+                #     print("game_over_timer, ",self.game_over_timer)
            
     def handle_events(self):
         for event in pygame.event.get():
@@ -67,12 +68,14 @@ class FlappyBird:
                     self.bird.flap()
                     self.flap_sound.play()
                 if event.key == pygame.K_SPACE and self.game_active == False:
-                    if time.time() - self.game_over_timer > 1:
+                    
+                    self.end_time_over = time.time()
+                    if self.end_time_over - self.start_time_over > 1:
                         self.game_active = True 
                         self.pipes.reset_pipe()
                         self.bird.reset_bird()              
                         self.score.score = 0
-                        self.game_over_timer = 0
+                        
 
     def update(self):
             self.bird.update()
@@ -80,6 +83,7 @@ class FlappyBird:
             self.pipes.update()
             if self.collision_check() == False:
                 self.game_active = False
+                self.start_time_over = time.time()
             
             if self.check_pass_pipe() == True:
                 self.score.increase_score()
