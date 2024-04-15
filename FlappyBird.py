@@ -54,9 +54,7 @@ class FlappyBird:
             else:
                 self.background_music.play()
                 self.show_menu(self.screen)
-                # if self.game_over_timer == 0:
-                #     self.game_over_timer = time.time()
-                #     print("game_over_timer, ",self.game_over_timer)
+                
            
     def handle_events(self):
         for event in pygame.event.get():
