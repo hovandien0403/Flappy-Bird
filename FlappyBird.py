@@ -10,32 +10,26 @@ from settings import *
 class FlappyBird:
     def __init__(self):
 
-        #Tạo hàm cho trò chơi
         pygame.init()
         pygame.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=512)
         pygame.display.set_caption("Flappy Bird")
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
         
-        #Chèn background
         self.bg = pygame.image.load('assets/background-night.png').convert()
         self.bg = pygame.transform.scale2x(self.bg)
         
-        #Chèn Menu
         self.game_menu_surface = pygame.transform.scale2x(pygame.image.load('assets/message.png').convert_alpha())
         self.game_menu_rect = self.game_menu_surface.get_rect(center=(216,384))
 
-        #Tạo biến
         self.game_active = False 
         self.start_time_over = 0
 
-        #Tạo âm thanh
         self.flap_sound = pygame.mixer.Sound('sound/sfx_wing.wav')
         self.hit_sound = pygame.mixer.Sound('sound/sfx_hit.wav')
         self.score_sound = pygame.mixer.Sound('sound/sfx_point.wav')
         self.background_music = pygame.mixer.Sound('sound/background_music.mp3')
 
-        #Tạo đối tượng
         self.bird = Bird()
         self.pipes = Pipe()
         self.floor = Floor()
